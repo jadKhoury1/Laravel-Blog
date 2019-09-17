@@ -115,6 +115,7 @@ class BaseController extends LaravelBaseController
     protected function getAuthUser()
     {
         $this->user =  $this->guard()->user();
+        $this->user->load('role');
         return $this;
     }
 
