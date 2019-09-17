@@ -4,6 +4,7 @@ namespace App\Base;
 
 
 use App\User;
+use App\UserAction;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
@@ -58,6 +59,12 @@ class BaseController extends LaravelBaseController
     {
         $this->request  = $request;
         $this->response = $response;
+    }
+
+    public function callAction($method, $parameters)
+    {
+        $this->user = Auth::user();
+        return parent::callAction($method, $parameters);
     }
 
     /**
@@ -128,5 +135,30 @@ class BaseController extends LaravelBaseController
     protected function getUserTokenInstance()
     {
         return $this->user->token();
+    }
+
+    /**
+     * Tis method will check if the user has already a pending transaction
+     *
+     * @param $action
+     * @param string $model
+     * @return bool
+     */
+    protected function checkIfUserHasPendingAction($action, $model = 'App\Post')
+    {
+        if ($this->user->role_key === 'admin') {
+            return true;
+        }
+
+        $userAction = UserAction::where('user_id', $this->user->id)->first();
+
+        // check if user as a similar pending action
+        if ($userAction !== null && $userAction->action == $action
+            && $userAction->model == $model && $userAction->status == UserAction::STATUS_PENDING) {
+            $this->errorMessage = 'You already have a pending transaction';
+            return false;
+        }
+
+        return true;
     }
 }
