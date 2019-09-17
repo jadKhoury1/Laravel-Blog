@@ -35,7 +35,7 @@ class AuthServiceProvider extends ServiceProvider
         Gate::define('approve-post-action', 'App\Policies\PostPolicy@approve');
 
         Gate::define('action-approve', function (User $user) {
-            return $user->role_key == 'customer' ? true : false;
+            return $user->role_key == 'admin' ? true : false;
         });
 
         Passport::routes();
