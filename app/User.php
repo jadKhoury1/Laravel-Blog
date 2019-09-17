@@ -25,7 +25,7 @@ class User extends Authenticatable
      * @var array
      */
     protected $hidden = [
-        'password', 'remember_token',
+        'password', 'remember_token', 'role'
     ];
 
     /**
@@ -36,4 +36,50 @@ class User extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
+
+    /**
+     * Append extra attributes to the User array
+     *
+     * @var array
+     */
+    protected $appends = [
+        'role_name', 'role_key'
+    ];
+
+    /**
+     * Get the Role associated with the user
+     */
+    public function role()
+    {
+        return $this->belongsTo('App\Role', 'role_id');
+    }
+
+    /**
+     * Get the Posts that are associated with the user
+     */
+    public function posts()
+    {
+        return $this->hasMany('App\Post', 'user_id');
+    }
+
+    /**
+     * Get User Role Name
+     *
+     * @return string|null
+     */
+    public function getRoleNameAttribute()
+    {
+        return $this->role !== null ? $this->role->name : null;
+    }
+
+    /**
+     * Get User Role key
+     *
+     * @return string|null
+     */
+    public function getRoleKeyAttribute()
+    {
+        return $this->role !== null ? $this->role->key : null;
+    }
+
 }
