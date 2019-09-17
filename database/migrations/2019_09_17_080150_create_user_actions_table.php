@@ -17,8 +17,8 @@ class CreateUserActionsTable extends Migration
             $table->increments('id');
             $table->bigInteger('user_id')->unsigned();
             $table->enum('action', ['ADD', 'EDIT', 'DELETE']);
-            $table->string('model');
-            $table->integer('object_id')->unsigned();
+            $table->integer('item_id')->unsigned();
+            $table->string('item_type');
             $table->text('data')->nullable();
             $table->integer('status')->default(0);
             $table->bigInteger('action_taken_by')->unsigned()->nullable();

@@ -29,7 +29,7 @@ class UserAction extends BaseModel
      * @var array
      */
     protected $fillable = [
-        'user_id', 'action', 'model', 'object_id', 'data', 'status', 'action_taken_by'
+        'user_id', 'action', 'item_id', 'item_type', 'data', 'status', 'action_taken_by'
     ];
 
     /**
@@ -46,6 +46,14 @@ class UserAction extends BaseModel
     public function actionTakenBy()
     {
         return $this->belongsTo('App\User', 'action_taken_by');
+    }
+
+    /**
+     * Get the owning commentable model.
+     */
+    public function item()
+    {
+        return $this->morphTo();
     }
 
 }

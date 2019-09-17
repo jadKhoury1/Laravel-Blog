@@ -26,4 +26,12 @@ class Post extends BaseModel
         return $this->belongsTo('App\User', 'user_id');
     }
 
+    /**
+     * Get all of the post's actions
+     */
+    public function actions()
+    {
+        return $this->morphMany('App\UserAction', 'item');
+    }
+
 }

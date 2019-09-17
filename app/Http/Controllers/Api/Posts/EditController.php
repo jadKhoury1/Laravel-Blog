@@ -52,8 +52,8 @@ class EditController extends BaseController
         return UserAction::query()->create([
             'user_id'   => $this->user->id,
             'action'    => UserAction::ACTION_EDIT,
-            'model'     => 'App\Post',
-            'object_id' => $postId,
+            'item_id'   => $postId,
+            'item_type' => 'posts',
             'data'      => json_encode($this->request->only(['title', 'description', 'image']))
         ]);
     }

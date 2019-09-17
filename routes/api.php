@@ -41,7 +41,7 @@ Route::group(['middleware' => 'auth:api'], function() {
     Route::post('logout', 'Api\Auth\LogoutController@logout');
 
     /**
-     * Apis that are related to the Post ans that requires authentication
+     * Apis that are related to the Post and that requires authentication
      */
 
     Route::post('post/add', 'Api\Posts\AddController@add');
@@ -52,5 +52,11 @@ Route::group(['middleware' => 'auth:api'], function() {
     Route::delete('post/delete/{id}', 'Api\Posts\DeleteController@delete')
         ->middleware('can:delete-post,id')
         ->where('id', '[0-9]+');
+
+    /**
+     * Apis that are related to the user Actions
+     */
+    Route::get('actions/get', 'Api\Actions\GetController@getAll');
+    Route::get('action/get/{id}', 'Api\Actions\GetController@getDetails');
 
 });
