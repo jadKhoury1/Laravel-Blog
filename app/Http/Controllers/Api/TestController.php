@@ -9,6 +9,8 @@ class TestController extends BaseController
 {
     public function test()
     {
-        return $this->response->statusOk(['user' => Auth::user()]);
+        $this->getAuthUser()->getUserTokenInstance()->revoke();
+
+        return $this->response->statusOk([]);
     }
 }

@@ -2,6 +2,7 @@
 
 namespace App\Base;
 
+
 use App\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -97,10 +98,34 @@ class BaseController extends LaravelBaseController
     }
 
     /**
-     * Authenticate User
+     * Get the guard to be used during authentication.
+     *
+     * @return \Illuminate\Contracts\Auth\StatefulGuard
      */
-    protected function login()
+    protected function guard()
     {
-        Auth::login($this->user);
+        return Auth::guard();
+    }
+
+    /**
+     * Get Authenticated user instance
+     *
+     * @return $this
+     */
+    protected function getAuthUser()
+    {
+        $this->user =  $this->guard()->user();
+        return $this;
+    }
+
+
+    /**
+     * Get User Token Instance
+     *
+     * @return \Laravel\Passport\Token|null
+     */
+    protected function getUserTokenInstance()
+    {
+        return $this->user->token();
     }
 }

@@ -4,7 +4,6 @@
 namespace App\Http\Controllers\Api\Auth;
 
 use App\Base\BaseController;
-use Illuminate\Support\Facades\Auth;
 
 
 class LoginController extends BaseController
@@ -67,15 +66,6 @@ class LoginController extends BaseController
         ];
     }
 
-    /**
-     * Get the guard to be used during authentication.
-     *
-     * @return \Illuminate\Contracts\Auth\StatefulGuard
-     */
-    private function guard()
-    {
-        return Auth::guard();
-    }
 
     /**
      * Get the needed authorization credentials from the request.
@@ -100,16 +90,6 @@ class LoginController extends BaseController
     }
 
 
-    /**
-     * Get Authenticated user instance
-     *
-     * @return $this
-     */
-    private function getAuthUser()
-    {
-        $this->user =  $this->guard()->user();
-        return $this;
-    }
 
     /**
      * Generate new token for user
