@@ -145,7 +145,7 @@ class BaseController extends LaravelBaseController
      * @param string $model
      * @return bool
      */
-    protected function checkIfUserHasPendingAction($action, $model = 'App\Post')
+    protected function checkIfUserHasPendingAction($action, $model = 'posts')
     {
         if ($this->user->role_key === 'admin') {
             return true;
@@ -157,7 +157,7 @@ class BaseController extends LaravelBaseController
 
         // check if user as a similar pending action
         if ($userAction !== null && $userAction->action == $action
-            && $userAction->model == $model && $userAction->status == UserAction::STATUS_PENDING) {
+            && $userAction->item_type == $model && $userAction->status == UserAction::STATUS_PENDING) {
             $this->errorMessage = 'You already have a pending transaction';
             return false;
         }

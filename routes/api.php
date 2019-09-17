@@ -56,7 +56,11 @@ Route::group(['middleware' => 'auth:api'], function() {
     /**
      * Apis that are related to the user Actions
      */
-    Route::get('actions/get', 'Api\Actions\GetController@getAll');
-    Route::get('action/get/{id}', 'Api\Actions\GetController@getDetails');
+    Route::group(['middleware' => 'can:action-approve'], function () {
+        Route::get('actions/get', 'Api\Actions\GetController@getAll');
+        Route::get('action/get/{id}', 'Api\Actions\GetController@getDetails')->where('id', '[0-9]+');
+        Route::post('action', 'Api\Actions\HandleController@handle');
+    });
+
 
 });

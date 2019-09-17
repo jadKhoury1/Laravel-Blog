@@ -2,6 +2,7 @@
 
 namespace App\Providers;
 
+use App\User;
 use App\Post;
 use App\Policies\PostPolicy;
 use Illuminate\Support\Facades\Gate;
@@ -32,6 +33,10 @@ class AuthServiceProvider extends ServiceProvider
         Gate::define('update-post', 'App\Policies\PostPolicy@update');
         Gate::define('delete-post', 'App\Policies\PostPolicy@delete');
         Gate::define('approve-post-action', 'App\Policies\PostPolicy@approve');
+
+        Gate::define('action-approve', function (User $user) {
+            return $user->role_key == 'customer' ? true : false;
+        });
 
         Passport::routes();
     }
