@@ -3,6 +3,7 @@
 namespace App\Http\Middleware;
 
 use Closure;
+use App\Base\BaseResponse;
 use Illuminate\Support\Facades\Auth;
 
 class RedirectIfAuthenticated
@@ -17,8 +18,10 @@ class RedirectIfAuthenticated
      */
     public function handle($request, Closure $next, $guard = null)
     {
+        $response = new BaseResponse();
+
         if (Auth::guard($guard)->check()) {
-            return redirect('/home');
+            return $response->statusFail(['message' => 'You are already authenticated']);
         }
 
         return $next($request);

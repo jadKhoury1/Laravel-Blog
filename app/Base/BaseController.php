@@ -2,7 +2,9 @@
 
 namespace App\Base;
 
+use App\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Foundation\Bus\DispatchesJobs;
 use Illuminate\Foundation\Validation\ValidatesRequests;
@@ -43,6 +45,13 @@ class BaseController extends LaravelBaseController
      */
     protected $response;
 
+    /**
+     * Stores auth user data
+     *
+     * @var User
+     */
+    protected $user;
+
 
     public function __construct(Request $request, BaseResponse $response)
     {
@@ -57,7 +66,7 @@ class BaseController extends LaravelBaseController
      */
     protected function makeValidation()
     {
-        $validation = Validator::make($this->request->all(), $this->rules, $this->setCustomErrorMessages());
+        $validation = Validator::make($this->request->all(), $this->setValidationRules(), $this->setCustomErrorMessages());
 
         if ($validation->fails()) {
             $this->errorMessage = $validation->errors()->first();
@@ -75,5 +84,23 @@ class BaseController extends LaravelBaseController
     protected function setCustomErrorMessages()
     {
         return [];
+    }
+
+    /**
+     * Set Validation Rules
+     *
+     * @return array
+     */
+    protected function setValidationRules()
+    {
+        return [];
+    }
+
+    /**
+     * Authenticate User
+     */
+    protected function login()
+    {
+        Auth::login($this->user);
     }
 }
