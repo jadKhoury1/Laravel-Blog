@@ -83,6 +83,7 @@ class BaseResponse extends JsonResponse
     private function createResponse($data, $status, $statusCode, $headers = [])
     {
         $dataToReturn = [];
+
         $dataToReturn['status']   = $status;
         $dataToReturn['response'] = $data;
         return parent::create($dataToReturn, $statusCode, $headers);

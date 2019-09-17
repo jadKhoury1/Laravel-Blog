@@ -25,12 +25,12 @@ class RegisterController extends BaseController
     }
 
     /**
-     * Method that will handle user registration
+     * Method that handles user registration
      */
     public function register()
     {
         if ($this->makeValidation() === false) {
-            return $this->response->statusFail($this->errorMessage);
+            return $this->response->statusFail(['message' => $this->errorMessage]);
         }
 
         $token = $this->create()->createUserToken();
