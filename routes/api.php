@@ -18,22 +18,30 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 
 });
 
+
+/**
+ * Login and register APIs
+ */
 Route::post('register', 'Api\Auth\RegisterController@register');
 Route::post('login', 'Api\Auth\LoginController@login');
 
+/**
+ *
+ */
 Route::get('posts/get', 'Api\Posts\GetController@getAll');
-
 Route::get('post/get/{id}', 'Api\Posts\GetController@getDetails')
     ->where('id', '[0-9]+');
 
 
 Route::group(['middleware' => 'auth:api'], function() {
 
-    Route::get('test', 'Api\TestController@test')->middleware('can:approve-post-action');
+    /**
+     * Logout API
+     */
     Route::post('logout', 'Api\Auth\LogoutController@logout');
 
     /**
-     * Apis that are related to the Post
+     * Apis that are related to the Post ans that requires authentication
      */
 
     Route::post('post/add', 'Api\Posts\AddController@add');
@@ -42,7 +50,7 @@ Route::group(['middleware' => 'auth:api'], function() {
         ->where('id', '[0-9]+');
 
     Route::delete('post/delete/{id}', 'Api\Posts\DeleteController@delete')
-        ->middleware('can:update-post,id')
+        ->middleware('can:delete-post,id')
         ->where('id', '[0-9]+');
 
 });
