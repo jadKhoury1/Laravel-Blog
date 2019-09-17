@@ -3,6 +3,7 @@
 namespace App\Base;
 
 
+use App\Post;
 use App\User;
 use App\UserAction;
 use Illuminate\Http\Request;
@@ -158,6 +159,25 @@ class BaseController extends LaravelBaseController
         if ($userAction !== null && $userAction->action == $action
             && $userAction->model == $model && $userAction->status == UserAction::STATUS_PENDING) {
             $this->errorMessage = 'You already have a pending transaction';
+            return false;
+        }
+
+        return true;
+    }
+
+    /**
+     * Check if Post Id is valid
+     *
+     * @param $id
+     *
+     * @return bool
+     */
+    protected function checkIfPostExists($id)
+    {
+        $post = Post::query()->where('id', $id)->exists();
+
+        if ($post === false) {
+            $this->errorMessage = 'Invalid Error Message';
             return false;
         }
 

@@ -29,11 +29,15 @@ Route::group(['middleware' => 'auth:api'], function() {
      * Apis that are related to the Post
      */
     Route::get('posts/get', 'Api\Post\GetController@get');
-    Route::get('posts/get/{id}', 'Api\Post\GetController@getDetails')->where('id', '[0-9]+');
+    Route::get('posts/get/{id}', 'Api\Post\GetController@getDetails')
+        ->middleware('can:delete-post,id')
+        ->where('id', '[0-9]+');
+
     Route::post('post/add', 'Api\Post\AddController@add');
     Route::put('post/edit/{id}', 'Api\Post\EditController@edit')
         ->middleware('can:update-post,id')
         ->where('id', '[0-9]+');
+
     Route::delete('post/delete/{id}', 'Api\Post\DeleteController@delete');
 
 

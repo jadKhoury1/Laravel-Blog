@@ -16,7 +16,9 @@ class EditController extends BaseController
      */
     public function edit($id)
     {
-        if ($this->makeValidation() === false || $this->checkIfUserHasPendingAction(UserAction::ACTION_EDIT) === false) {
+        if ($this->checkIfPostExists($id) === false || $this->makeValidation() === false ||
+            $this->checkIfUserHasPendingAction(UserAction::ACTION_EDIT) === false
+        ) {
             return $this->response->statusFail($this->errorMessage);
         }
         $this->createAction($id);
@@ -39,7 +41,7 @@ class EditController extends BaseController
     }
 
     /**
-     * Create Action
+     * Create Edit Action
      *
      * @param $postId
      *
