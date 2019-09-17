@@ -4,6 +4,7 @@ namespace App\Policies;
 
 use App\User;
 use App\Post;
+use phpDocumentor\Reflection\Types\Integer;
 use Illuminate\Auth\Access\HandlesAuthorization;
 
 class PostPolicy
@@ -36,12 +37,18 @@ class PostPolicy
      * Determine whether the user can view the post.
      *
      * @param  \App\User  $user
-     * @param  \App\Post  $post
+     * @param  integer $id
      * @return mixed
      */
-    public function view(User $user, Post $post)
+    public function view(User $user, $id)
     {
-        //
+        $post = Post::query()->find($id);
+
+        if ($post === null || ($post->active == 0 && ($user->id !== $post->user_id))) {
+            return false;
+        }
+
+        return true;
     }
 
     /**
@@ -59,24 +66,24 @@ class PostPolicy
      * Determine whether the user can update the post.
      *
      * @param  \App\User  $user
-     * @param  \App\Post  $post
+     * @param  Integer $id
      * @return mixed
      */
-    public function update(User $user, Post $post)
+    public function update(User $user, $id)
     {
-        return $user->id === $post->user_id;
+        return $this->checkAuthorization($user, $id);
     }
 
     /**
      * Determine whether the user can delete the post.
      *
      * @param  \App\User  $user
-     * @param  \App\Post  $post
+     * @param  Integer  $id
      * @return mixed
      */
-    public function delete(User $user, Post $post)
+    public function delete(User $user, $id)
     {
-        return $user->id === $post->user_id;
+        return $this->checkAuthorization($user, $id);
     }
 
     /**
@@ -112,6 +119,16 @@ class PostPolicy
     public function forceDelete(User $user, Post $post)
     {
         //
+    }
+
+    private function checkAuthorization(User $user, $id)
+    {
+        $post = Post::query()->find($id);
+
+        if ($post === null || $post->active == 0) {
+            return false;
+        }
+        return $user->id === $post->user_id;
     }
 
 }

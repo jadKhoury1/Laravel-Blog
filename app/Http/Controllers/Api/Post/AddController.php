@@ -18,7 +18,7 @@ class AddController extends BaseController
     private $post;
 
     /**
-     * Add new POst
+     * Add new Post
      *
      * @return \Illuminate\Http\JsonResponse
      */
@@ -31,7 +31,7 @@ class AddController extends BaseController
             return $this->response->statusFail($this->errorMessage);
         }
 
-        return $this->response->statusOk(['post' => $this->post]);
+        return $this->response->statusOk(['message' => 'Post Creation sent for approval', 'post' => $this->post]);
 
     }
 

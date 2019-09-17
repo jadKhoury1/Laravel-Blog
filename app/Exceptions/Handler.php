@@ -3,7 +3,10 @@
 namespace App\Exceptions;
 
 use Exception;
+use App\Base\BaseResponse;
+use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
+use Illuminate\Http\JsonResponse;
 
 class Handler extends ExceptionHandler
 {
@@ -42,10 +45,15 @@ class Handler extends ExceptionHandler
      *
      * @param  \Illuminate\Http\Request  $request
      * @param  \Exception  $exception
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Http\Response|JsonResponse
      */
     public function render($request, Exception $exception)
     {
+        if ($exception instanceof AuthorizationException) {
+            $response = new BaseResponse();
+            return $response->unauthorized(['message' => 'You are not authorized to perform this action']);
+        }
+
         return parent::render($request, $exception);
     }
 }

@@ -150,7 +150,9 @@ class BaseController extends LaravelBaseController
             return true;
         }
 
-        $userAction = UserAction::where('user_id', $this->user->id)->first();
+        $userAction = UserAction::where('user_id', $this->user->id)
+            ->where('action', $action)
+            ->first();
 
         // check if user as a similar pending action
         if ($userAction !== null && $userAction->action == $action
