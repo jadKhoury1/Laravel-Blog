@@ -31,7 +31,6 @@ class AuthServiceProvider extends ServiceProvider
 
         Gate::define('update-post', 'App\Policies\PostPolicy@update');
         Gate::define('delete-post', 'App\Policies\PostPolicy@delete');
-        Gate::define('view-post', 'App\Policies\PostPolicy@view');
         Gate::define('approve-post-action', 'App\Policies\PostPolicy@approve');
 
         Passport::routes();

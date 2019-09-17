@@ -64,7 +64,7 @@ class BaseController extends LaravelBaseController
 
     public function callAction($method, $parameters)
     {
-        $this->user = Auth::user();
+        $this->user = $this->guard()->user();
         return parent::callAction($method, $parameters);
     }
 
@@ -112,7 +112,7 @@ class BaseController extends LaravelBaseController
      */
     protected function guard()
     {
-        return Auth::guard();
+        return Auth::guard('api');
     }
 
     /**
@@ -177,7 +177,7 @@ class BaseController extends LaravelBaseController
         $post = Post::query()->where('id', $id)->exists();
 
         if ($post === false) {
-            $this->errorMessage = 'Invalid Error Message';
+            $this->errorMessage = 'Invalid ID';
             return false;
         }
 

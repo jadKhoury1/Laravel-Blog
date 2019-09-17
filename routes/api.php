@@ -21,24 +21,28 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 Route::post('register', 'Api\Auth\RegisterController@register');
 Route::post('login', 'Api\Auth\LoginController@login');
 
+Route::get('posts/get', 'Api\Posts\GetController@getAll');
+
+Route::get('post/get/{id}', 'Api\Posts\GetController@getDetails')
+    ->where('id', '[0-9]+');
+
+
 Route::group(['middleware' => 'auth:api'], function() {
+
     Route::get('test', 'Api\TestController@test')->middleware('can:approve-post-action');
     Route::post('logout', 'Api\Auth\LogoutController@logout');
 
     /**
      * Apis that are related to the Post
      */
-    Route::get('posts/get', 'Api\Post\GetController@get');
-    Route::get('posts/get/{id}', 'Api\Post\GetController@getDetails')
-        ->middleware('can:delete-post,id')
-        ->where('id', '[0-9]+');
 
-    Route::post('post/add', 'Api\Post\AddController@add');
-    Route::put('post/edit/{id}', 'Api\Post\EditController@edit')
+    Route::post('post/add', 'Api\Posts\AddController@add');
+    Route::put('post/edit/{id}', 'Api\Posts\EditController@edit')
         ->middleware('can:update-post,id')
         ->where('id', '[0-9]+');
 
-    Route::delete('post/delete/{id}', 'Api\Post\DeleteController@delete');
-
+    Route::delete('post/delete/{id}', 'Api\Posts\DeleteController@delete')
+        ->middleware('can:update-post,id')
+        ->where('id', '[0-9]+');
 
 });

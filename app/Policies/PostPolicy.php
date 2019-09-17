@@ -42,13 +42,7 @@ class PostPolicy
      */
     public function view(User $user, $id)
     {
-        $post = Post::query()->find($id);
 
-        if ($post === null || ($post->active == 0 && ($user->id !== $post->user_id))) {
-            return false;
-        }
-
-        return true;
     }
 
     /**
