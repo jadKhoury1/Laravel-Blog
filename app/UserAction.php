@@ -87,4 +87,19 @@ class UserAction extends BaseModel
         }
     }
 
+    /**
+     * Alter Image field
+     */
+    public function getDataAttribute($value) {
+        if ($value === null) {
+            return $value;
+        }
+
+        $data = json_decode($value, true);
+        $data['image_path'] = url($data['image']);
+
+        return json_encode($data);
+
+    }
+
 }

@@ -25,9 +25,7 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 Route::post('register', 'Api\Auth\RegisterController@register');
 Route::post('login', 'Api\Auth\LoginController@login');
 
-/**
- *
- */
+
 Route::get('posts/get', 'Api\Posts\GetController@getAll');
 
 
@@ -62,6 +60,8 @@ Route::group(['middleware' => 'auth:api'], function() {
 
     Route::get('post/get/{id}', 'Api\Posts\GetController@getDetails')
         ->where('id', '[0-9]+');
+
+    Route::post('image/upload', 'Api\ImageController@upload');
 
 
 });

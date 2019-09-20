@@ -40,7 +40,7 @@ class AddController extends BaseController
         return [
             'title'       => 'required|string|min:6|max:191',
             'description' => 'required|string',
-            'image'       => 'sometimes|string'
+            'image'       => 'required|string'
         ];
     }
 

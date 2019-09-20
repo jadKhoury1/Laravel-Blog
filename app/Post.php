@@ -22,6 +22,15 @@ class Post extends BaseModel
     ];
 
     /**
+     * Append extra attributes to the Post array
+     *
+     * @var array
+     */
+    protected $appends = [
+        'image_path'
+    ];
+
+    /**
      * Get the user that owns the post
      */
     public function user()
@@ -37,10 +46,20 @@ class Post extends BaseModel
         return $this->morphMany('App\UserAction', 'item');
     }
 
+    /**
+     * Get latest pending action related to the blog
+     */
     public function action(){
         return $this->morphOne('App\UserAction', 'item')
             ->where('status', UserAction::STATUS_PENDING)
             ->latest();
+    }
+
+    /**
+     * Get Image Path Attribute
+     */
+    public function getImagePathAttribute() {
+        return url($this->image);
     }
 
 }

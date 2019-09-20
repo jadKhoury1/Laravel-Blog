@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api\Actions;
 
 use App\UserAction;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
 use App\Base\BaseController;
 use Illuminate\Support\Facades\DB;
@@ -181,7 +182,11 @@ class HandleController extends BaseController
     {
         $data = json_decode($action->data, true);
         try {
-            $model->where('id', $action->item_id)->update($data);
+            $model->where('id', $action->item_id)->update([
+                'title'       => $data['title'],
+                'description' => $data['description'],
+                'image'       => $data['image']
+            ]);
             $this->item = $model->find($action->item_id);
         } catch (\Exception $e) {
             return false;
