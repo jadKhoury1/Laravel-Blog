@@ -5,6 +5,7 @@ namespace App;
 
 
 use App\Base\BaseModel;
+use Illuminate\Support\Str;
 
 class UserAction extends BaseModel
 {
@@ -33,6 +34,15 @@ class UserAction extends BaseModel
     ];
 
     /**
+     * Append extra attributes to the User array
+     *
+     * @var array
+     */
+    protected $appends = [
+        'transaction'
+    ];
+
+    /**
      * Get the user that initiated the action
      */
     public function user()
@@ -54,6 +64,27 @@ class UserAction extends BaseModel
     public function item()
     {
         return $this->morphTo();
+    }
+
+    /**
+     * Get the transaction phrase associated with the user action
+     */
+    public function getTransactionAttribute()
+    {
+        // The bellow code will change posts to Post or articles to Article
+        $itemName = ucfirst(Str::singular($this->item_type));
+
+        if ($this->action === UserAction::ACTION_ADD) {
+            return "{$itemName} Creation Pending Transaction";
+        }
+
+        if ($this->action === UserAction::ACTION_EDIT) {
+            return "{$itemName}  Editing Pending Transaction";
+        }
+
+        if ($this->action === UserAction::ACTION_DELETE) {
+            return "{$itemName} Deletion Pending Transaction";
+        }
     }
 
 }

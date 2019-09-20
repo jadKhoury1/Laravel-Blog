@@ -86,7 +86,7 @@ class LoginController extends BaseController
      */
     private function attemptLogin()
     {
-        return $this->guard()->attempt($this->credentials());
+        return $this->guard(false)->attempt($this->credentials());
     }
 
 

@@ -29,8 +29,6 @@ Route::post('login', 'Api\Auth\LoginController@login');
  *
  */
 Route::get('posts/get', 'Api\Posts\GetController@getAll');
-Route::get('post/get/{id}', 'Api\Posts\GetController@getDetails')
-    ->where('id', '[0-9]+');
 
 
 Route::group(['middleware' => 'auth:api'], function() {
@@ -61,6 +59,9 @@ Route::group(['middleware' => 'auth:api'], function() {
         Route::get('action/get/{id}', 'Api\Actions\GetController@getDetails')->where('id', '[0-9]+');
         Route::post('action', 'Api\Actions\HandleController@handle');
     });
+
+    Route::get('post/get/{id}', 'Api\Posts\GetController@getDetails')
+        ->where('id', '[0-9]+');
 
 
 });

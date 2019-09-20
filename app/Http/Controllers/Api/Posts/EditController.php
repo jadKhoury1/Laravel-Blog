@@ -17,13 +17,14 @@ class EditController extends BaseController
     public function edit($id)
     {
         if ($this->checkIfPostExists($id) === false || $this->makeValidation() === false ||
-            $this->checkIfUserHasPendingAction(UserAction::ACTION_EDIT) === false
+            $this->checkIfUserHasPendingAction(UserAction::ACTION_EDIT, 'posts', $id) === false
         ) {
-            return $this->response->statusFail($this->errorMessage);
+            return $this->response->statusFail(['message' => $this->errorMessage]);
         }
         $this->createAction($id);
+        $this->post->load('action');
 
-        return $this->response->statusOk(['message' => 'Post Edit sent for approval', 'id' => $id]);
+        return $this->response->statusOk(['message' => 'Post Edit sent for approval', 'post' => $this->post]);
     }
 
     /**

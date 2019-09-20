@@ -37,4 +37,10 @@ class Post extends BaseModel
         return $this->morphMany('App\UserAction', 'item');
     }
 
+    public function action(){
+        return $this->morphOne('App\UserAction', 'item')
+            ->where('status', UserAction::STATUS_PENDING)
+            ->latest();
+    }
+
 }

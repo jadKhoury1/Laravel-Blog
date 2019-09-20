@@ -16,14 +16,14 @@ class DeleteController extends BaseController
     public function delete($id)
     {
         if ($this->checkIfPostExists($id) === false ||
-            $this->checkIfUserHasPendingAction(UserAction::ACTION_DELETE) === false
+            $this->checkIfUserHasPendingAction(UserAction::ACTION_DELETE, 'posts', $id) === false
         ) {
-            return $this->response->statusFail($this->errorMessage);
+            return $this->response->statusFail(['message' => $this->errorMessage]);
         }
 
         $this->createAction($id);
-
-        return $this->response->statusOk(['message' => 'Post Deletion sent for approval']);
+        $this->post->load('action');
+        return $this->response->statusOk(['message' => 'Post Deletion sent for approval', 'post' => $this->post]);
     }
 
     /**

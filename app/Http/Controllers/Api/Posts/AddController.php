@@ -10,12 +10,6 @@ use Illuminate\Support\Facades\DB;
 
 class AddController extends BaseController
 {
-    /**
-     * Stores newly created post
-     *
-     * @var Post
-     */
-    private $post;
 
     /**
      * Add new Post
@@ -28,9 +22,10 @@ class AddController extends BaseController
             $this->checkIfUserHasPendingAction(UserAction::ACTION_ADD) === false ||
             $this->create() === false
         ) {
-            return $this->response->statusFail($this->errorMessage);
+            return $this->response->statusFail(['message' => $this->errorMessage]);
         }
 
+        $this->post->load('action');
         return $this->response->statusOk(['message' => 'Post Creation sent for approval', 'post' => $this->post]);
 
     }

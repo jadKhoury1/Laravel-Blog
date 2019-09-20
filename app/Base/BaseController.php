@@ -55,6 +55,13 @@ class BaseController extends LaravelBaseController
      */
     protected $user;
 
+    /**
+     * Stores post data
+     *
+     * @var Post
+     */
+    protected $post;
+
 
     public function __construct(Request $request, BaseResponse $response)
     {
@@ -108,11 +115,12 @@ class BaseController extends LaravelBaseController
     /**
      * Get the guard to be used during authentication.
      *
+     * @param bool $api
      * @return \Illuminate\Contracts\Auth\StatefulGuard
      */
-    protected function guard()
+    protected function guard($api = true)
     {
-        return Auth::guard('api');
+        return $api == true ? Auth::guard('api') : Auth::guard();
     }
 
     /**
@@ -122,7 +130,7 @@ class BaseController extends LaravelBaseController
      */
     protected function getAuthUser()
     {
-        $this->user =  $this->guard()->user();
+        $this->user =  $this->guard(false)->user();
         $this->user->load('role');
         return $this;
     }
@@ -143,21 +151,31 @@ class BaseController extends LaravelBaseController
      *
      * @param $action
      * @param string $model
+     * @param int $id
+     *
      * @return bool
      */
-    protected function checkIfUserHasPendingAction($action, $model = 'posts')
+    protected function checkIfUserHasPendingAction($action, $model = 'posts', $id = null)
     {
-        if ($this->user->role_key === 'admin') {
-            return true;
+
+        $query = UserAction::query()
+            ->where('status', UserAction::STATUS_PENDING)
+            ->where('item_type', $model);
+
+        if ($this->user->role_key !== 'admin') {
+            $query->where('user_id', $this->user->id);
+            if ($action === UserAction::ACTION_ADD) {
+                $query->where('action', $action);
+            }
+        }
+        else {
+            $query->where('item_id', $id);
         }
 
-        $userAction = UserAction::where('user_id', $this->user->id)
-            ->where('action', $action)
-            ->first();
+        $userAction = $query->first();
 
         // check if user as a similar pending action
-        if ($userAction !== null && $userAction->action == $action
-            && $userAction->item_type == $model && $userAction->status == UserAction::STATUS_PENDING) {
+        if ($userAction !== null ) {
             $this->errorMessage = 'You already have a pending transaction';
             return false;
         }
@@ -174,9 +192,9 @@ class BaseController extends LaravelBaseController
      */
     protected function checkIfPostExists($id)
     {
-        $post = Post::query()->where('id', $id)->exists();
+        $this->post = Post::query()->where('id', $id)->first();
 
-        if ($post === false) {
+        if ($this->post === null) {
             $this->errorMessage = 'Invalid ID';
             return false;
         }

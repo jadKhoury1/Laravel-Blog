@@ -7,6 +7,7 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Str;
 use App\Base\BaseController;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Database\Eloquent\Model;
 use phpDocumentor\Reflection\Types\Integer;
 
 class HandleController extends BaseController
@@ -24,6 +25,13 @@ class HandleController extends BaseController
      * @var string
      */
     private $failureMessage = 'Action could not be done';
+
+    /**
+     * Stores that data of the updated Item
+     *
+     * @var Model
+     */
+    private $item;
 
     /**
      * Handle User actions
@@ -64,7 +72,7 @@ class HandleController extends BaseController
         $action = UserAction::query()->with('item')->find($data['id']);
 
         if ($action->status != UserAction::STATUS_PENDING) {
-            return $this->response->statusFail('You already took an action on this item');
+            return $this->response->statusFail(['message' => 'You already took an action on this item']);
         }
 
         switch ($data['action_type']) {
@@ -97,7 +105,7 @@ class HandleController extends BaseController
         }
         DB::commit();
 
-        return $this->response->statusOk(['message' => $this->successMessage]);
+        return $this->response->statusOk(['message' => $this->successMessage, 'item' => $this->item ]);
     }
 
     /**
@@ -120,7 +128,11 @@ class HandleController extends BaseController
         }
         DB::commit();
 
-        return $this->response->statusOk(['message' => $this->successMessage]);
+        if (!$this->item) {
+            $this->item = $model->find($action->item_id);
+        }
+
+        return $this->response->statusOk(['message' => $this->successMessage, 'item' => $this->item]);
 
     }
 
@@ -149,6 +161,7 @@ class HandleController extends BaseController
     {
         try {
             $model->where('id', $action->item_id)->update(['active' => 1]);
+            $this->item = $model->find($action->item_id);
         } catch (\Exception $e) {
             return false;
         }
@@ -169,6 +182,7 @@ class HandleController extends BaseController
         $data = json_decode($action->data, true);
         try {
             $model->where('id', $action->item_id)->update($data);
+            $this->item = $model->find($action->item_id);
         } catch (\Exception $e) {
             return false;
         }
@@ -186,6 +200,7 @@ class HandleController extends BaseController
     {
         try {
             $model->where('id', $action->item_id)->delete();
+            $this->item = $model->withTrashed()->find($action->item_id);
         } catch (\Exception $e) {
             return false;
         }
