@@ -3,15 +3,15 @@
 ## LARAVEL BLOG PROJECT
 
 <h2>Server Requirements</h2>
- - PHP >= 7.2.0
- - BCMath PHP Extension
- - Ctype PHP Extension
- - JSON PHP Extension
- - Mbstring PHP Extension
- - OpenSSL PHP Extension
- - PDO PHP Extension
- - Tokenizer PHP Extension
- - XML PHP Extension
+ - PHP >= 7.2.0 <br />
+ - BCMath PHP Extension <br />
+ - Ctype PHP Extension <br />
+ - JSON PHP Extension <br />
+ - Mbstring PHP Extension <br />
+ - OpenSSL PHP Extension <br />
+ - PDO PHP Extension <br />
+ - Tokenizer PHP Extension <br />
+ - XML PHP Extension <br />
 
 <h4>First Step</h4>
 
@@ -43,9 +43,9 @@
     - https://www.getpostman.com/collections/12ff393642ab0ae58e39
     
   <h4>Admin User</h4>
-   - An admin user will be created by default
-   - email: admin@blog.com
-   - password: ;Y<(p/EX9fa@Tj(p
+   - An admin user will be created by default <br />
+   - email: admin@blog.com <br />
+   - password: ;Y<(p/EX9fa@Tj(p <br />
 ## License
 
 The Laravel framework is open-source software licensed under the [MIT license](https://opensource.org/licenses/MIT).
