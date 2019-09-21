@@ -100,7 +100,7 @@ class HandleController extends BaseController
         $model  = $this->getModel($action);
 
         DB::beginTransaction();
-        if ($this->{$method}($action, $model) === false||
+        if ($this->{$method}($action, $model) === false ||
             $this->changeActionStatus($action, UserAction::STATUS_APPROVED) === false) {
             return $this->response->statusFail(['message' => $this->failureMessage]);
         }
@@ -238,7 +238,7 @@ class HandleController extends BaseController
     private function changeActionStatus($action, $status)
     {
         try {
-            $action->update(['status' => $status]);
+            $action->update(['status' => $status, 'action_taken_by' => $this->user->id]);
         } catch (\Exception $e) {
             return false;
         }

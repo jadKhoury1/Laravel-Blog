@@ -42,7 +42,6 @@ class ImageController extends  BaseController
             return $this->response->statusFail([ 'message' => $this->errorMessage ]);
         }
 
-
         if ($this->moveImage() === false) {
             return $this->response->statusFail(['message' => 'Image Could not be uploaded']);
         }
@@ -71,7 +70,6 @@ class ImageController extends  BaseController
      */
     private function moveImage()
     {
-
         if ($this->request->hasFile('file')) {
             $image = $this->request->file('file');
             $name = time() . '-' . $image->getClientOriginalName();
