@@ -168,9 +168,11 @@ class BaseController extends LaravelBaseController
                 $query->where('action', $action);
             }
         }
-        else {
+
+        if ($action !== UserAction::ACTION_ADD) {
             $query->where('item_id', $id);
         }
+
 
         $userAction = $query->first();
 
