@@ -18,14 +18,12 @@ class LocalFileOperations extends BaseFileOperations
 
    public function move(Request $request, $key)
    {
-       Log::debug('This should be reached');
-       Log::debug('key: ' . $key);
        if ($request->hasFile($key)) {
-           $image = $request->file($key);
-           $name = time() . '-' . $image->getClientOriginalName();
-           Log::debug('name: ' . $name);
+           $file = $request->file($key);
+           $name = time() . '-' . $file->getClientOriginalName();
+
            $destinationPath = public_path($this->destination);
-           $image->move($destinationPath, $name);
+           $file->move($destinationPath, $name);
            $this->setFullFilePath(url($this->destination . '/' . $name))
                 ->setRelativeFilePath($this->destination . '/' .$name);
            return true;

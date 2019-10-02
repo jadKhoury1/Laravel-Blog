@@ -157,24 +157,13 @@ class BaseController extends LaravelBaseController
      */
     protected function checkIfUserHasPendingAction($action, $model = 'posts', $id = null)
     {
-
-        $query = UserAction::query()
-            ->where('status', UserAction::STATUS_PENDING)
-            ->where('item_type', $model);
-
-        if ($this->user->role_key !== 'admin') {
-            $query->where('user_id', $this->user->id);
-            if ($action === UserAction::ACTION_ADD) {
-                $query->where('action', $action);
-            }
+        if ($this->user->role_key === 'admin' && $action === UserAction::ACTION_ADD) {
+            return true;
         }
 
-        if ($action !== UserAction::ACTION_ADD) {
-            $query->where('item_id', $id);
-        }
-
-
-        $userAction = $query->first();
+        $userAction = UserAction::query()
+                ->getPending($this->user, $action, $model, $id)
+                ->first();
 
         // check if user as a similar pending action
         if ($userAction !== null ) {

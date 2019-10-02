@@ -90,7 +90,8 @@ class UserAction extends BaseModel
     /**
      * Alter Image field
      */
-    public function getDataAttribute($value) {
+    public function getDataAttribute($value)
+    {
         if ($value === null) {
             return $value;
         }
@@ -101,5 +102,26 @@ class UserAction extends BaseModel
         return json_encode($data);
 
     }
+
+    /**
+     * Scope that fetches pending transactions
+     */
+    public function scopeGetPending($query, $user, $action, $model, $id)
+    {
+        $query->where('status', UserAction::STATUS_PENDING)
+             ->where('item_type', $model);
+
+        if ($user->role_key !== 'admin') {
+            $query->where('user_id', $user->id);
+            if ($action === self::ACTION_ADD) {
+                $query->where('action', $action);
+            }
+        }
+
+        if ($action !== self::ACTION_ADD) {
+            $query->where('item_id', $id);
+        }
+    }
+
 
 }

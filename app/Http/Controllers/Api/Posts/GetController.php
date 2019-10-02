@@ -15,27 +15,12 @@ class GetController extends BaseController
      */
     public function getAll()
     {
-        $query = Post::query();
+        $posts =  Post::query()
+            ->getAll($this->user)
+            ->orderBy('updated_at', 'DESC')
+            ->get();
 
-        // If user iis logged in and his role is admin get the latest action related to the post
-        // And get the user associated with each post
-        if ($this->user && $this->user->role_key === 'admin') {
-            $query->with(['action.user' => function ($query) {
-                $query->select(['id', 'name', 'email']);
-            }]);
-        } else {
-            $query->where('active', 1);
-            if ($this->user) {
-                $query->orWhere('user_id', $this->user->id)
-                      ->with(['action' => function ($query) {
-                            $query->where('user_id', $this->user->id);
-                      }]);
-            }
-        }
-
-        $query->orderBy('updated_at', 'DESC');
-
-        return $this->response->statusOk(['posts' => $query->get()]);
+        return $this->response->statusOk(['posts' => $posts]);
     }
 
     /**
@@ -47,19 +32,7 @@ class GetController extends BaseController
      */
     public function getDetails($id)
     {
-        $query = Post::query();
-
-        if ($this->user) {
-            $query->with(['action' => function ($query) {
-                if ($this->user->role_key === 'admin') {
-                    $query->with(['user' => function ($query) {
-                        $query->select(['id', 'name', 'email']);
-                    }]);
-                }
-            }]);
-        }
-
-        $post = $query->withTrashed()->find($id);
+        $post = Post::query()->getDetails($this->user)->withTrashed()->find($id);
 
         // If the Post ID is invalid or the post is not active and the user is not logged In or if the user is not
         // the owner of the post return Unauthorized message
