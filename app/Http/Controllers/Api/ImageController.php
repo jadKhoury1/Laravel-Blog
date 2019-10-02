@@ -4,6 +4,7 @@ namespace  App\Http\Controllers\Api;
 
 use App\Base\BaseController;
 use Illuminate\Http\Request;
+use App\Helpers\File\FileHelper;
 
 class ImageController extends  BaseController
 {
@@ -21,12 +22,6 @@ class ImageController extends  BaseController
      */
     private $relativePath;
 
-    /**
-     * The location where the image should be stored
-     *
-     * @var string
-     */
-    protected $destination = '/uploads';
 
     /**
      * Upload Image and return Image Path
@@ -70,17 +65,16 @@ class ImageController extends  BaseController
      */
     private function moveImage()
     {
-        if ($this->request->hasFile('file')) {
-            $image = $this->request->file('file');
-            $name = time() . '-' . $image->getClientOriginalName();
-            $destinationPath = public_path($this->destination);
-            $image->move($destinationPath, $name);
-            $this->fullImagePath = url($this->destination . '/' . $name);
-            $this->relativePath  = $this->destination . '/' .$name;
-            return true;
-        }
 
-        return false;
+        $fileOperation = new FileHelper();
+
+        if ($fileOperation->move($this->request, 'file') === false) {
+            return false;
+        }
+        $this->fullImagePath = $fileOperation->getFullFilePath();
+        $this->relativePath = $fileOperation->getRelativeFilePath();
+
+        return true;
 
     }
 

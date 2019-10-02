@@ -59,7 +59,11 @@ class Post extends BaseModel
      * Get Image Path Attribute
      */
     public function getImagePathAttribute() {
-        return url($this->image);
+        if (filter_var($this->image, FILTER_VALIDATE_URL) === false) {
+            return url($this->image);
+        }
+
+        return $this->image;
     }
 
 }
